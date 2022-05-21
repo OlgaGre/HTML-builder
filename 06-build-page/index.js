@@ -21,7 +21,20 @@ fs.readdir(pathComponents, (err, files) => {
         for (let i = 0; i < files.length; i++) {
             nameHtmlComponents.push(files[i].split('.')[0])
         }
-        console.log(nameHtmlComponents);
+        // console.log(nameHtmlComponents);
+        for (let i = 0; i < nameHtmlComponents.length; i++) {
+            let textToReplace = ''
+            fs.readFile(pathComponents + '/' + nameHtmlComponents[i] + '.html', 'utf8', (error, data) => {
+                textToReplace += data;
+                // console.log(textToReplace);
+            });
+
+        }
+
+
+
+
+
 
     }
 })
