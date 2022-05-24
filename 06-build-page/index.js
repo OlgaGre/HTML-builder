@@ -1,4 +1,5 @@
 const fs = require('fs');
+const fsPromises = require("fs/promises");
 const path = require('path');
 // let nameHtmlComponents = [];
 
@@ -6,119 +7,101 @@ let pathComponents = __dirname + '/components';
 let pathFolderPprojectDist = __dirname + '/project-dist';
 
 
+
+
 // создание папки project-dist
-fs.mkdir(pathFolderPprojectDist, (err) => {
-    if (err) {
-        return console.error(err);
-    }
-    console.log('Directory created successfully!');
-});
+function createFolder() {
+    fs.mkdir(pathFolderPprojectDist, (err) => {
+        if (err) {
+            return console.error(err);
+        }
+        console.log('Directory created successfully!');
+    });
+}
+//
 // копиравание html файла 
-fs.copyFile(__dirname + '/template.html', pathFolderPprojectDist + '/index.html', err => {
-    if (err) throw err; // не удалось скопировать файл
-    console.log('Файл успешно скопирован');
-})
+async function copeHtml() {
+    return fsPromises.copyFile(__dirname + '/template.html', pathFolderPprojectDist + '/index.html')
+}
+
 
 // 
-
-
-
-fs.readdir(pathComponents, (err, files) => {
-    if (err) {
-        console.log(err);
-    }
-
-    for (let i = 0; i < files.length; i++) {
-
-        fs.readFile(pathComponents + '/' + files[i], 'utf8', (error, data) => {
+// просмотр папки components и нахождение в ней файлов.
+async function findComponentsFiles() {
+    let files = await fsPromises.readdir(pathComponents, (err, files) => {
             if (err) {
                 console.log(err);
+            } else {
+                console.log(files)
             }
-            let textReplace = data;
-            // console.log(data);
-            fs.readFile(pathFolderPprojectDist + '/index.html', 'utf8', (error, data1) => {
-                if (err) {
-                    return console.log(err);
-                }
-                console.log(data1);
-                let re = new RegExp(`{{${files[i].split('.')[0]}}}`);
-                data1 = data1.replace(re, textReplace);
-
-                // fs.writeFile(pathFolderPprojectDist + '/index.html', data1, 'utf8', function(err) {
-                //     if (err) { console.log(err) };
-                //     console.log(result)
-                // });
-
-
-            });
-
-        });
-
-
+        })
+        // console.log(files);
+    for (let i = 0; i < files.length; i++) {
+        //  await changeHTMLFiles()
+        //  await saveConteined(files[i])
+        await changeHTMLFiles(files[i])
 
 
     }
 
-})
+
+
+}
+//
+// имя файла без разрешения файлов
+async function cutArr(nameOfFile) {
+
+    return nameOfFile.split('.')[0]
+
+
+}
+//
+// сохранение содержимого в переменную
+async function saveConteined(nameOfFile) {
+    let savedContantInFileComponents = await fsPromises.readFile(pathComponents + '/' + nameOfFile, 'utf8');
+    // console.log(savedContantInFileComponents);
+    return savedContantInFileComponents
+
+    // await changeHTMLFiles(saveConteined, nameOfFile)
+
+
+
+}
+//
+// смена {{...}} на содержание переменной
+async function changeHTMLFiles(nameOfFile) {
+    let CutName = await cutArr(nameOfFile)
+    let SaveConteined = await saveConteined(nameOfFile)
+    let HTMLinProject = await readingChangeFile()
+
+    console.log(CutName, SaveConteined);
+    let re = new RegExp(`{{${CutName}}}`);
+
+    result = HTMLinProject.replace(re, SaveConteined);
+    fsPromises.writeFile(pathFolderPprojectDist + '/index.html', result)
+
+
+}
+//
+// чтение файла, который будет меняться
+async function readingChangeFile() {
+    return fsPromises.readFile(pathFolderPprojectDist + '/index.html', 'utf8', (err, data) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log(data);
+        }
+    });
+}
+(async() => {
+    await createFolder()
+    await copeHtml()
+    await findComponentsFiles()
+})();
 
 
 
 
 
 
-
-
-
-// // Нахождение всех имён тегов в файле шаблона
-
-// fs.readdir(pathComponents, (err, files) => {
-//     if (err)
-//         console.log(err);
-//     else {
-//         // console.log(files)
-//         // копирование файлов через перебор массива
-//         for (let i = 0; i < files.length; i++) {
-//             nameHtmlComponents.push(files[i].split('.')[0])
-//         }
-//         // console.log(nameHtmlComponents);
-//         let result = ''
-//         fs.readFile(__dirname + '/template.html', 'utf8', (error, data) => {
-//             result += data
-//         });
-//         console.log(result);
-//         for (let i = 0; i < nameHtmlComponents.length; i++) {
-//             let textToReplace = ''
-//             fs.readFile(pathComponents + '/' + nameHtmlComponents[i] + '.html', 'utf8', (error, data) => {
-//                 textToReplace += data;
-//                 // console.log(textToReplace);
-//             });
-
-//         }
-
-
-
-
-
-
-//     }
-// })
-
-
-
-// function replaceHtml() {
-
-
-//     let result = ''
-//     for (let i = 0; i < nameHtmlComponents.length; i++) {
-//         let replaceText = ''
-//         fs.readFile(pathComponents, 'utf8', (err, data) => replaceText = data)
-//         console.log(replaceText);
-//         fs.readFile(__dirname + '/template.html', 'utf8', (error, data) => {
-//             data.replace(`{{${nameHtmlComponents[i]}}}`, replaceText)
-//         })
-//     }
-//     //   console.log(__dirname + '/template.html');
-
-// }
-// replaceHtml()
 //     // node 06-build-page
