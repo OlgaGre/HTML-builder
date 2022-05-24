@@ -127,42 +127,51 @@ function createCss() {
     }
 }
 
-// function createAssets() {
-//     fs.mkdir(pathFolderPprojectDist + '/assets', (err) => {
-//         if (err) {
-//             return console.error(err);
-//         }
-//         console.log('Directory created successfully!');
-//     });
-// }
-// async function readingOldAssetsFolder() {
-//     await fsPromises.readdir(pathOldAssetsFolder, (err, files) => {
-//         if (err)
-//             console.log(err);
-//         else {
-//             console.log(files)
-//                 // копирование файлов через перебор массива
-//                 // for (let i = 0; i < files.length; i++) {
+function createAssets() {
+    fs.mkdir(pathFolderPprojectDist + '/assets', (err) => {
+        if (err) {
+            return console.error(err);
+        }
+        console.log('Directory created successfully!');
+    });
+}
+async function readingOldAssetsFolder(path) {
 
-//             //     fs.unlink(newFolderPath + '/' + files[i], (err) => {
-//             //         if (err) throw err;
-//             //         //   console.log('successfully deleted ');
-//             //     });
+    fs.readdir(pathOldAssetsFolder, { withFileTypes: true }, (err, files) => {
+            if (err) {
+                console.log(err)
+            }
+            console.log(files)
+            for (const file of files) {
+                if (file.isDirectory()) {
+                    fs.mkdir(pathFolderPprojectDist + '/assets/' + file.name, (err) => {
+                        if (err) {
+                            return console.error(err);
+                        }
+                    })
+                }
+            }
 
-//             // }
+        })
+        // if (!fs.readdir(pathOldAssetsFolder).isFile()) {
+        //     arrOfFolder = fsPromises.readdir(pathOldAssetsFolder)
+        //     for (let i = 0; i < arrOfFolder.length; i++) {
+        //         fs.mkdir(pathOldAssetsFolder + '/' + arrOfFolder[i])
 
-//         }
-//     })
-// }
-// // fs.readdir()
-// async function copyDir() {
-//     await createAssets()
-//     await readingOldAssetsFolder()
+    //     }
+    // }
+    // return fsPromises.readdir(pathOldAssetsFolder)
+}
+// fs.readdir()
+async function copyDir() {
+    await createAssets()
+    await readingOldAssetsFolder()
+        //console.log(filesOrFolder)
 
 
 
 
-// }
+}
 
 
 (async() => {
@@ -170,7 +179,7 @@ function createCss() {
     await copeHtml()
     await findComponentsFiles()
     createCss()
-        // await copyDir()
+    await copyDir()
 })();
 
 
