@@ -31,8 +31,6 @@ async function findComponentsFiles() {
     let files = await fsPromises.readdir(pathComponents, (err, files) => {
             if (err) {
                 console.log(err);
-            } else {
-                console.log(files)
             }
         })
         // console.log(files);
@@ -74,7 +72,7 @@ async function changeHTMLFiles(nameOfFile) {
     let SaveConteined = await saveConteined(nameOfFile)
     let HTMLinProject = await readingChangeFile()
 
-    console.log(CutName, SaveConteined);
+    //  console.log(CutName, SaveConteined);
     let re = new RegExp(`{{${CutName}}}`);
 
     result = HTMLinProject.replace(re, SaveConteined);
@@ -88,8 +86,6 @@ async function readingChangeFile() {
     return fsPromises.readFile(pathFolderPprojectDist + '/index.html', 'utf8', (err, data) => {
         if (err) {
             console.log(err);
-        } else {
-            console.log(data);
         }
     });
 }
