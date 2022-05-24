@@ -1,3 +1,4 @@
+const { log } = require('console');
 const fs = require('fs');
 const fsPromises = require("fs/promises");
 const path = require('path');
@@ -5,7 +6,8 @@ const path = require('path');
 
 let pathComponents = __dirname + '/components';
 let pathFolderPprojectDist = __dirname + '/project-dist';
-
+let pathCSS = __dirname + '/project-dist/style.css';
+let pathOldAssetsFolder = __dirname + '/assets'
 
 
 
@@ -15,7 +17,7 @@ function createFolder() {
         if (err) {
             return console.error(err);
         }
-        console.log('Directory created successfully!');
+        //  console.log('Directory created successfully!');
     });
 }
 //
@@ -89,10 +91,86 @@ async function readingChangeFile() {
         }
     });
 }
+
+function createCss() {
+    // fs.unlink(pathCSS, (err) => {
+    //     if (err) throw err;
+    //     //   console.log('successfully deleted ');
+    // });
+    // поиск файлов css
+    fs.readdir(__dirname + '/styles', (err, files) => {
+        if (err)
+            console.log(err);
+        else {
+            // console.log(files)
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].split('.')[1] == 'css') {
+
+                    readFile(files[i])
+                }
+            }
+        }
+
+    })
+
+    function readFile(file) {
+        fs.readFile(__dirname + '/styles/' + file, 'utf8', (error, data) => {
+
+            writeFile(data)
+        });
+    }
+
+    function writeFile(text) {
+        fs.appendFile(pathCSS, text, function(error) {
+            if (error) throw error; // если возникла ошибка
+        })
+    }
+}
+
+// function createAssets() {
+//     fs.mkdir(pathFolderPprojectDist + '/assets', (err) => {
+//         if (err) {
+//             return console.error(err);
+//         }
+//         console.log('Directory created successfully!');
+//     });
+// }
+// async function readingOldAssetsFolder() {
+//     await fsPromises.readdir(pathOldAssetsFolder, (err, files) => {
+//         if (err)
+//             console.log(err);
+//         else {
+//             console.log(files)
+//                 // копирование файлов через перебор массива
+//                 // for (let i = 0; i < files.length; i++) {
+
+//             //     fs.unlink(newFolderPath + '/' + files[i], (err) => {
+//             //         if (err) throw err;
+//             //         //   console.log('successfully deleted ');
+//             //     });
+
+//             // }
+
+//         }
+//     })
+// }
+// // fs.readdir()
+// async function copyDir() {
+//     await createAssets()
+//     await readingOldAssetsFolder()
+
+
+
+
+// }
+
+
 (async() => {
     await createFolder()
     await copeHtml()
     await findComponentsFiles()
+    createCss()
+        // await copyDir()
 })();
 
 
