@@ -136,37 +136,37 @@ function createAssets() {
     });
 }
 async function readingOldAssetsFolder(path) {
-
     fs.readdir(pathOldAssetsFolder, { withFileTypes: true }, (err, files) => {
-            if (err) {
-                console.log(err)
-            }
-            console.log(files)
-            for (const file of files) {
-                if (file.isDirectory()) {
-                    fs.mkdir(pathFolderPprojectDist + '/assets/' + file.name, (err) => {
-                        if (err) {
-                            return console.error(err);
-                        }
-                    })
-                }
-            }
+        if (err) {
+            console.log(err)
+        }
+        //  console.log(files)
+        for (const file of files) {
+            if (file.isDirectory()) {
+                console.log(file)
+                fs.mkdir(pathFolderPprojectDist + '/assets/' + file.name, (err) => {
+                    if (err) {
+                        return console.error(err);
+                    }
+                })
+                fs.copyFile(pathOldAssetsFolder + file.name, pathFolderPprojectDist + '/assets/' + file.name, (err) => {
+                    if (err) {
+                        return console.error(err);
+                    }
+                })
 
-        })
-        // if (!fs.readdir(pathOldAssetsFolder).isFile()) {
-        //     arrOfFolder = fsPromises.readdir(pathOldAssetsFolder)
-        //     for (let i = 0; i < arrOfFolder.length; i++) {
-        //         fs.mkdir(pathOldAssetsFolder + '/' + arrOfFolder[i])
+            }
+        }
 
-    //     }
-    // }
-    // return fsPromises.readdir(pathOldAssetsFolder)
+    })
 }
 // fs.readdir()
 async function copyDir() {
-    await createAssets()
-    await readingOldAssetsFolder()
-        //console.log(filesOrFolder)
+    await createAssets();
+    await readingOldAssetsFolder();
+
+
+
 
 
 
