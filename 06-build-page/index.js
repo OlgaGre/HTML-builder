@@ -141,7 +141,7 @@ async function readingOldAssetsFolder(path) {
             console.log(err)
         }
         //  console.log(files)
-        console.log(files)
+        // console.log(files)
         for (const file of files) {
             if (file.isDirectory()) {
 
@@ -154,7 +154,7 @@ async function readingOldAssetsFolder(path) {
                     if (err) {
                         console.log(err)
                     }
-                    console.log(filesInFolder)
+                    //   console.log(filesInFolder)
                     filesInFolder.forEach((el) => {
                         fs.copyFile(pathOldAssetsFolder + '/' + file.name + '/' + el.name, pathFolderPprojectDist + '/assets/' + file.name + '/' + el.name, (err) => {
                             if (err) {
