@@ -1,6 +1,4 @@
-const fs = require('node:fs');
-let path = require('path');
-let dirPath = path.join(__dirname, '/text.txt');
-fs.readFile(dirPath, 'utf8', (error, data) => {
-    console.log(data)
-});
+const fs = require('fs');
+const path = require('path');
+const text = fs.createReadStream(path.join(__dirname, 'text.txt'));
+text.pipe(process.stdout);
