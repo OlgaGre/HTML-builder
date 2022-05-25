@@ -141,19 +141,31 @@ async function readingOldAssetsFolder(path) {
             console.log(err)
         }
         //  console.log(files)
+        console.log(files)
         for (const file of files) {
             if (file.isDirectory()) {
-                console.log(file)
+
                 fs.mkdir(pathFolderPprojectDist + '/assets/' + file.name, (err) => {
                     if (err) {
                         return console.error(err);
                     }
                 })
-                fs.copyFile(pathOldAssetsFolder + file.name, pathFolderPprojectDist + '/assets/' + file.name, (err) => {
+                fs.readdir(pathOldAssetsFolder + '/' + file.name, { withFileTypes: true }, (err, filesInFolder) => {
                     if (err) {
-                        return console.error(err);
+                        console.log(err)
                     }
+                    console.log(filesInFolder)
+                    filesInFolder.forEach((el) => {
+                        fs.copyFile(pathOldAssetsFolder + '/' + file.name + '/' + el.name, pathFolderPprojectDist + '/assets/' + file.name + '/' + el.name, (err) => {
+                            if (err) {
+                                return console.error(err);
+                            }
+                        })
+                    })
+
+
                 })
+
 
             }
         }

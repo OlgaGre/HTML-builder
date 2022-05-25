@@ -4,18 +4,6 @@ const folderPath = __dirname + '/files';
 const newFolderPath = __dirname + '/files-copy';
 
 function copyDir() {
-
-
-    // fs.remove(newFolderPath, (err) => {
-
-    //     if (err) {
-    //         return console.log("error occurred in deleting directory", err);
-    //     }
-
-    //     console.log("Directory deleted successfully");
-    // });
-
-
     fs.mkdir(newFolderPath, (err) => {
         if (err) {
             return console.error(err);
