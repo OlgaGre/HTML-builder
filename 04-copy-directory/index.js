@@ -1,16 +1,27 @@
 const fs = require('fs');
+const fsPromises = require("fs/promises");
 const path = require('path');
 const folderPath = __dirname + '/files';
 const newFolderPath = __dirname + '/files-copy';
 
-function copyDir() {
+
+
+
+async function copyDir() {
     fs.mkdir(newFolderPath, (err) => {
         if (err) {
             // return console.error(err);
         }
-        console.log('Directory created successfully!');
+        //    console.log('Directory created successfully!');
     });
     // файлы в папке files
+    await deleteFiles()
+    await addFiles()
+
+
+
+}
+async function deleteFiles() {
     fs.readdir(newFolderPath, (err, files) => {
         if (err)
             console.log(err);
@@ -28,6 +39,9 @@ function copyDir() {
 
         }
     })
+}
+
+function addFiles() {
     fs.readdir(folderPath, (err, files) => {
         if (err)
             console.log(err);
@@ -45,9 +59,6 @@ function copyDir() {
 
         }
     })
-
-
-
 
 }
 copyDir()
