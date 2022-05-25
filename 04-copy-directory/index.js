@@ -6,7 +6,7 @@ const newFolderPath = __dirname + '/files-copy';
 function copyDir() {
     fs.mkdir(newFolderPath, (err) => {
         if (err) {
-            return console.error(err);
+            // return console.error(err);
         }
         console.log('Directory created successfully!');
     });
